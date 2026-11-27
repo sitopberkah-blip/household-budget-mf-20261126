@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hartono Household Budget — Every dollar has a job</title>
+<meta name="description" content="A simple household budget planner for the Hartono family: track spending, set category budgets, save toward goals and see where the money goes.">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="main.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true">$</span>
+      <span class="brand-text"><strong>Hartono Budget</strong><small>Every dollar has a job</small></span>
+    </a>
+    <nav class="mainnav" aria-label="Main navigation">
+      <a href="#/" data-nav="dashboard">Dashboard</a>
+      <a href="#/transactions" data-nav="transactions">Transactions</a>
+      <a href="#/budgets" data-nav="budgets">Budgets</a>
+      <a href="#/goals" data-nav="goals">Goals</a>
+      <a href="#/reports" data-nav="reports">Reports</a>
+    </nav>
+  </div>
+</header>
+<main id="app" class="wrap"></main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>Hartono Budget</strong> — a household budget planner for the Hartono family. All figures are stored only in this browser (localStorage); nothing leaves your device.</p>
+    <p class="fineprint">Demo data for November 2026 is included so every page has real numbers to explore. Add, edit or delete anything — it is yours to play with.</p>
+  </div>
+</footer>
+</body>
+</html>
