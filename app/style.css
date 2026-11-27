@@ -91,6 +91,8 @@ main { padding: 22px 20px 40px; }
 table { width: 100%; border-collapse: collapse; font-family: "Segoe UI", sans-serif; font-size: .93rem; }
 th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #efe9dc; vertical-align: top; }
 th { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
+.sort-btn { all: unset; cursor: pointer; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; white-space: nowrap; }
+.sort-btn:hover, .sort-btn:focus-visible { color: var(--ink); text-decoration: underline; }
 td.amt, th.amt { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .amt.neg { color: var(--red); }
 .amt.pos { color: var(--green); font-weight: 600; }

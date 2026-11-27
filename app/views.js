@@ -90,7 +90,19 @@ export function renderTransactions(filter) {
   if (filter.month) rows = rows.filter((t) => t.date.startsWith(filter.month));
   if (filter.category) rows = rows.filter((t) => t.category === filter.category);
   if (q) rows = rows.filter((t) => t.desc.toLowerCase().includes(q));
-  rows = [...rows].sort((a, b) => (a.date < b.date ? 1 : -1));
+  // Column sorting: click a heading to sort, click again to reverse.
+  const sort = filter.sort || { key: 'date', dir: 'desc' };
+  const comparators = {
+    date: (a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0),
+    desc: (a, b) => a.desc.localeCompare(b.desc),
+    category: (a, b) => catLabel(a.category).localeCompare(catLabel(b.category)),
+    amount: (a, b) => a.amount - b.amount,
+    balance: (a, b) => a.balance - b.balance,
+  };
+  const cmp = comparators[sort.key] || comparators.date;
+  rows = [...rows].sort((a, b) => (sort.dir === 'asc' ? cmp(a, b) : -cmp(a, b)));
+  const arrow = (key) => (sort.key === key ? (sort.dir === 'asc' ? ' ▲' : ' ▼') : '');
+  const sortTh = (key, label, cls) => `<th${cls ? ` class="${cls}"` : ''}><button type="button" class="sort-btn" data-sort="${key}" aria-label="Sort by ${label.toLowerCase()}">${label}${arrow(key)}</button></th>`;
 
   const catOptions = `<option value="">All categories</option>` + CATEGORIES.map((c) => `<option value="${c.id}"${filter.category === c.id ? ' selected' : ''}>${c.label}</option>`).join('');
   const editing = filter.edit ? state.transactions.find((t) => t.id === filter.edit) : null;
@@ -109,14 +121,14 @@ export function renderTransactions(filter) {
     <div class="field"><button type="submit">${editing ? 'Save changes' : 'Add transaction'}</button>${editing ? ' <a href="#/transactions" class="secondary">Cancel</a>' : ''}</div>
   </form></section>
 
-  <section class="card"><h2>All transactions <span class="stat-sub">(${rows.length} shown)</span></h2>
+  <section class="card"><h2>All transactions <span class="stat-sub">(${rows.length} shown — click a column heading to sort)</span></h2>
   <div class="filters">
     <div class="field"><label for="flt-month">Month</label><select id="flt-month" data-filter="month"><option value="">All months</option>${monthOptions(filter.month || '')}</select></div>
     <div class="field"><label for="flt-cat">Category</label><select id="flt-cat" data-filter="category">${catOptions}</select></div>
     <div class="field"><label for="flt-q">Search</label><input id="flt-q" data-filter="q" type="search" placeholder="Search description…" value="${esc(filter.q || '')}"></div>
     <button class="secondary small" data-action="reset-data" type="button">Reset demo data</button>
   </div>
-  <table><thead><tr><th>Date</th><th>Description</th><th class="hide-phone">Category</th><th class="amt">Amount</th><th class="amt hide-phone">Balance</th><th></th></tr></thead><tbody>
+  <table><thead><tr>${sortTh('date', 'Date')}${sortTh('desc', 'Description')}${sortTh('category', 'Category', 'hide-phone')}${sortTh('amount', 'Amount', 'amt')}${sortTh('balance', 'Balance', 'amt hide-phone')}<th></th></tr></thead><tbody>
   ${rows.map((x) => `<tr>
     <td>${fmtDate(x.date)}</td>
     <td>${esc(x.desc)}</td>

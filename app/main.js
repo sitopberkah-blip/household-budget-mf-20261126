@@ -3,7 +3,7 @@ import { state, save, addTransaction, updateTransaction, deleteTransaction, setB
 import { renderDashboard, renderTransactions, renderBudgets, renderGoals, renderReports } from './views.js';
 
 const app = document.getElementById('app');
-const txFilter = { month: '', category: '', q: '', edit: '' };
+const txFilter = { month: '', category: '', q: '', edit: '', sort: { key: 'date', dir: 'desc' } };
 
 function parseHash() {
   const raw = location.hash.replace(/^#\/?/, '');
@@ -70,6 +70,18 @@ app.addEventListener('input', (e) => {
 });
 
 app.addEventListener('click', (e) => {
+  const sortBtn = e.target.closest('[data-sort]');
+  if (sortBtn) {
+    const key = sortBtn.getAttribute('data-sort');
+    if (txFilter.sort.key === key) {
+      txFilter.sort.dir = txFilter.sort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      // New column: newest/highest first for dates and money, A–Z for text.
+      txFilter.sort = { key, dir: (key === 'date' || key === 'amount' || key === 'balance') ? 'desc' : 'asc' };
+    }
+    rerender(true);
+    return;
+  }
   const del = e.target.closest('[data-delete]');
   if (del) {
     e.preventDefault();
